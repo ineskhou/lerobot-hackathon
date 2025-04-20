@@ -178,6 +178,8 @@ from lerobot.configs import parser
 
 @safe_disconnect
 def calibrate(robot: Robot, cfg: CalibrateControlConfig):
+    print("Calibrating robot...")
+    print(f"Config is {cfg}\n\n__________________________\n\n")
     # TODO(aliberts): move this code in robots' classes
     if robot.robot_type.startswith("stretch"):
         if not robot.is_connected:
@@ -232,6 +234,7 @@ def calibrate(robot: Robot, cfg: CalibrateControlConfig):
 
 @safe_disconnect
 def teleoperate(robot: Robot, cfg: TeleoperateControlConfig):
+    print(f"Teleoperating robot of type {robot.robot_type}...")
     control_loop(
         robot,
         control_time_s=cfg.teleop_time_s,
@@ -406,7 +409,7 @@ def _init_rerun(control_config: ControlConfig, session_name: str = "lerobot_cont
 def control_robot(cfg: ControlPipelineConfig):
     init_logging()
     logging.info(pformat(asdict(cfg)))
-
+    print(cfg)
     robot = make_robot_from_config(cfg.robot)
 
     # TODO(Steven): Blueprint for fixed window size
