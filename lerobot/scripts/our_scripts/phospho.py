@@ -127,9 +127,14 @@ def draw_from_points(x, y):
 
 
 if __name__ == "__main__":
-    recorder = MousePathRecorder()
-    x_positions, y_positions = recorder.run()
-    draw_from_points(x_positions, y_positions)
+
+    TELEOP = True
+    if TELEOP:
+        draw_from_follow()
+    else:
+        recorder = MousePathRecorder()
+        x_positions, y_positions = recorder.run()
+        draw_from_points(x_positions, y_positions)
 
     # client = PhosphoApi(base_url="http://localhost:80")
     # client.control.move_relative(

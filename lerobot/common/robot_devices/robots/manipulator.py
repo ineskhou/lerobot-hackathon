@@ -475,9 +475,12 @@ class ManipulatorRobot:
             follower_goal_pos[name] = goal_pos
 
             goal_pos = goal_pos.numpy().astype(np.float32)
+            print([goal_pos[0], goal_pos[1], goal_pos[2], goal_pos[4]])
+            #pose = self.robot.fk([goal_pos[0], goal_pos[1], goal_pos[2], goal_pos[4]])
+            #print(pose)
 
-            goal_xyz = INES.forward_kinematics(goal_pos)
-            follower_pos = INES.inverse_kinematics_follower(goal_xyz)
+            #goal_xyz = robot.fk([state.angles_rad[0], state.angles_rad[1], state.angles_rad[2], state.angles_rad[4]])
+            #follower_pos = INES.inverse_kinematics_follower(goal_xyz)
             self.follower_arms[name].write("Goal_Position", goal_pos)
             self.logs[f"write_follower_{name}_goal_pos_dt_s"] = time.perf_counter() - before_fwrite_t
         # Early exit when recording data is not requested
