@@ -346,11 +346,6 @@ def main():
     while(True):
         print(robot.capture_observation()['observation.state'])
 
-    if robot.is_connected:
-        # Disconnect manually to avoid a "Core dump" during process
-        # termination due to camera threads not properly exiting.
-        robot.disconnect()
-
 
 if __name__ == "__main__":
     main()

@@ -36,6 +36,18 @@ class LiveDrawer:
             self.index += 1
             self.root.after(self.delay, self.update_point)
 
+    def add_point(self, x, y):
+        self.canvas.create_oval(x-5, y-5, x+5, y+5, fill='red')
+
+        if self.prev_x is not None and self.prev_y is not None:
+            self.canvas.create_line(self.prev_x, self.prev_y, x, y, fill='blue', width=2)
+
+        self.prev_x = x
+        self.prev_y = y
+
+        # Do not schedule another update loop here
+        self.index += 1
+
     def run(self):
         self.root.mainloop()
 

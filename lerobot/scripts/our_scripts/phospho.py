@@ -80,12 +80,14 @@ def draw_from_follow():
 def draw_from_points(x, y):
     client = PhosphoApi(base_url="http://localhost:80")
     time.sleep(1)
+    response = client.control.move_init()
+    print(response)
 
     # Convert absolute x, y (in cm) to relative deltas (in m)
     for i in range(1, len(x)):
         dx = (x[i] - x[i - 1])  # cm to meters
         dy = (y[i] - y[i - 1]) # cm to meters
-
+      
         client.control.move_relative(
             x=0,
             y=dy,
