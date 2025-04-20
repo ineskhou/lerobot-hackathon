@@ -475,9 +475,6 @@ class ManipulatorRobot:
             follower_goal_pos[name] = goal_pos
 
             goal_pos = goal_pos.numpy().astype(np.float32)
-
-            goal_xyz = INES.forward_kinematics(goal_pos)
-            follower_pos = INES.inverse_kinematics_follower(goal_xyz)
             self.follower_arms[name].write("Goal_Position", goal_pos)
             self.logs[f"write_follower_{name}_goal_pos_dt_s"] = time.perf_counter() - before_fwrite_t
         # Early exit when recording data is not requested
