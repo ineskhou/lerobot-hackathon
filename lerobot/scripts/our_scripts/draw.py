@@ -1,4 +1,6 @@
 import tkinter as tk
+import numpy as np
+import matplotlib.pyplot as plt
 
 class LiveDrawer:
     def __init__(self, x_coords, y_coords, width=500, height=500, delay=500):
@@ -39,8 +41,24 @@ class LiveDrawer:
     def run(self):
         self.root.mainloop()
 
+
+def generate_circle_coords(radius=1.0, num_points=100, center=(50,50)):
+    # Theta goes from 0 to 2π, but negative direction for clockwise
+    theta = np.linspace(0, 2 * np.pi, num_points, endpoint=False)
+    
+    # Circle center is at (0, radius) so that (0, 0) is topmost point
+    x = radius * np.sin(theta) + center[0]
+    y = radius * (1 - np.cos(theta)) + center[1] # shifted down so (0, 0) is at top
+
+    return x, y
+
+
 if __name__ == "__main__":
-    x_coords = [50, 100, 150, 200, 250]
-    y_coords = [60, 110, 160, 210, 260]
-    drawer = LiveDrawer(x_coords, y_coords, delay=500)
+    #x_coords = [50, 100, 150, 200, 250]
+    #y_coords = [60, 110, 160, 210, 260]
+    num_points = 100
+    total_time = 5 * 1000
+    delay = total_time / num_points
+    x, y = generate_circle_coords(radius=50, num_points=num_points, center=(250,20))
+    drawer = LiveDrawer(x, y, delay=int(delay))
     drawer.run()
