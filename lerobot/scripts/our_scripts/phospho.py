@@ -90,8 +90,8 @@ def draw_from_points(x, y):
       
         client.control.move_to_absolute_position(
             x=0,
-            y=dy,
-            z=dx,
+            y=0.1,
+            z=0.1,
             rx=0,
             ry=0,
             rz=0,
