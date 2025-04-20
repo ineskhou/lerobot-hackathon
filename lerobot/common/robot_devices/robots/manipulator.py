@@ -457,7 +457,7 @@ class ManipulatorRobot:
             leader_pos[name] = self.leader_arms[name].read("Present_Position")
             leader_pos[name] = torch.from_numpy(leader_pos[name])
             self.logs[f"read_leader_{name}_pos_dt_s"] = time.perf_counter() - before_lread_t
-
+        print(f"Leader pos is {leader_pos['main']}")
         # Send goal position to the follower
         follower_goal_pos = {}
         for name in self.follower_arms:
@@ -477,7 +477,6 @@ class ManipulatorRobot:
             goal_pos = goal_pos.numpy().astype(np.float32)
             self.follower_arms[name].write("Goal_Position", goal_pos)
             self.logs[f"write_follower_{name}_goal_pos_dt_s"] = time.perf_counter() - before_fwrite_t
-
         # Early exit when recording data is not requested
         if not record_data:
             return
@@ -490,7 +489,7 @@ class ManipulatorRobot:
             follower_pos[name] = self.follower_arms[name].read("Present_Position")
             follower_pos[name] = torch.from_numpy(follower_pos[name])
             self.logs[f"read_follower_{name}_pos_dt_s"] = time.perf_counter() - before_fread_t
-
+        print(f"Follower pos is {follower_pos['main']}")
         # Create state by concatenating follower current position
         state = []
         for name in self.follower_arms:

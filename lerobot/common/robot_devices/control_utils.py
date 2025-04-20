@@ -260,7 +260,7 @@ def control_loop(
                 action = robot.send_action(pred_action)
                 action = {"action": action}
 
-        print(f"Action is {action}")
+        # print(f"\nAction is {action}\n")
 
         if dataset is not None:
             frame = {**observation, **action, "task": single_task}

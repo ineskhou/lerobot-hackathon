@@ -8,9 +8,25 @@ import json
 import logging
 import time
 import warnings
-
+from lerobot.common.robot_devices.robots.utils import Robot, make_robot_from_config
 import numpy as np
 import torch
+from lerobot.common.robot_devices.control_configs import (
+    ControlPipelineConfig,
+    TeleoperateControlConfig
+)
+from lerobot.configs import parser
+import sys
+import draccus
+# Simulate command line arguments
+sys.argv = [
+    "control_robot.py",  # First argument is always the script name
+    "--robot.type=so100",
+    "--robot.cameras={}",
+    "--control.type=teleoperate"
+]
+
+cfg = draccus.parse(config_class=ControlPipelineConfig, args=sys.argv[1:])
 
 
 class ManipulatorRobot:
@@ -323,13 +339,18 @@ class ManipulatorRobot:
         self.is_connected = False
 
 def main():
-    robot = ManipulatorRobot()
-    robot.connect()
+    robot = make_robot_from_config(cfg.robot)
+    if not robot.is_connected:
+        robot.connect()
   
     while(True):
-        robot.capture_observation
+        print(robot.capture_observation()['observation.state'])
 
     if robot.is_connected:
         # Disconnect manually to avoid a "Core dump" during process
         # termination due to camera threads not properly exiting.
         robot.disconnect()
+
+
+if __name__ == "__main__":
+    main()
