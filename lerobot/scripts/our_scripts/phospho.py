@@ -6,6 +6,7 @@
 # ///
 from phosphobot.api.client import PhosphoApi
 from pybotics.robot import Robot
+import requests
 
 from draw import LiveDrawer
 import numpy as np
@@ -78,26 +79,49 @@ def draw_from_follow():
 
 
 def draw_from_points(x, y):
-    client = PhosphoApi(base_url="http://localhost:80")
-    time.sleep(1)
-    response = client.control.move_init()
-    print(response)
+        
+    BASE_URL = "http://127.0.0.1:80"
+    INIT_ENDPOINT = f"{BASE_URL}/move/init"
+    RELATIVE_ENDPOINT = f"{BASE_URL}/move/relative"
 
-    # Convert absolute x, y (in cm) to relative deltas (in m)
+    # Give the server a moment to spin up
+    time.sleep(1)
+
+    # Initialize the robot
+    try:
+        init_resp = requests.post(INIT_ENDPOINT, json={}, timeout=5)
+        init_resp.raise_for_status()
+        print("Init response:", init_resp.json())
+    except requests.RequestException as e:
+        print("Failed to initialize:", e)
+        raise
+
+    # Suppose x and y are lists of positions in centimeters
+    # e.g.
+
+
     for i in range(1, len(x)):
-        dx = (x[i]/7000)  # cm to meters
-        dy = (y[i]/7000 ) # cm to meters
-      
-        client.control.move_to_absolute_position(
-            x=0,
-            y=0.1,
-            z=0.1,
-            rx=0,
-            ry=0,
-            rz=0,
-            open=0  # change to 1 if you want the gripper to open
-        )
-        print(f"Moved by dx={dx:.3f} m, dy={dy:.3f} m")
+        # Compute delta in meters
+        dx = (x[i] - x[i - 1]/50) 
+        dy = (y[i] - y[i - 1]/50) 
+
+        payload = {
+            "x": 0,      # meters
+            "y": dy,      # meters
+            "z": 0,
+            "rx": 0,
+            "ry": 0,
+            "rz": dx,
+            "open": 0     # change to 1 if you want the gripper to open
+        }
+
+        try:
+            resp = requests.post(RELATIVE_ENDPOINT, json=payload, timeout=1)
+            resp.raise_for_status()
+            print(f"Moved by dx={dx:.3f} m, dy={dy:.3f} m → response: {resp.json()}")
+        except requests.RequestException as e:
+            print(f"Movement request failed at step {i}:", e)
+
         time.sleep(0.1)
 
 
