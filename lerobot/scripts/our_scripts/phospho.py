@@ -85,10 +85,10 @@ def draw_from_points(x, y):
 
     # Convert absolute x, y (in cm) to relative deltas (in m)
     for i in range(1, len(x)):
-        dx = (x[i] - x[i - 1])  # cm to meters
-        dy = (y[i] - y[i - 1]) # cm to meters
+        dx = (x[i]/7000)  # cm to meters
+        dy = (y[i]/7000 ) # cm to meters
       
-        client.control.move_relative(
+        client.control.move_to_absolute_position(
             x=0,
             y=dy,
             z=dx,
